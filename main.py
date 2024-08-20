@@ -30,7 +30,7 @@ def agregar_producto(gestion, tipo_producto):
         codigo = (input('Ingrese codigo del producto. El codigo debe tener el siguiente formato XXX-XX (COD-talle) '))
         nombre = input('Ingrese nombre del producto: ')
         precio = (input('Ingrese precio del producto: '))
-        talle = int(input('Ingrese talle del producto: '))
+        talle = (input('Ingrese talle del producto: '))
         cantidad_stock=int(input('Ingrese cantidad de stock del producto: '))
 
        
@@ -40,7 +40,7 @@ def agregar_producto(gestion, tipo_producto):
             color = input('Ingrese color del producto: ')
             producto = Calzado(nombre, codigo, precio, cantidad_stock, talle, color, tipo_calzado) #tengo que pasarle todos los atributos para que pueda ser ejecutada la clase y quede guardada en la instancia producto
         elif tipo_producto == '2':
-            tipo_bikini = input('Ingrese tipo de cbikini (entera/2 partes/ 3 partes): ')
+            tipo_bikini = input('Ingrese tipo de bikini (entera/2 partes/ 3 partes): ')
             estampa = (input('Ingrese color del producto: '))
             producto = Bikini(nombre, codigo, precio, cantidad_stock, talle, estampa, tipo_bikini)
         else:

@@ -6,16 +6,16 @@ from decouple import config
 import json
 
 class Producto:
-    def __init__(self, nombre, codigo,  precio, cantidad_stock, talle):     #Construyo la clase
-        self.__nombre = nombre                                              #Defino los atributos
-        self.__codigo=self.validar_codigo(codigo)                           #Con doble guion bajo los atributos son privados para protegerlos
+    def __init__(self, nombre, codigo,  precio, cantidad_stock, talle):                               #Construyo la clase
+        self.__nombre = nombre                                                                        #Defino los atributos
+        self.__codigo=self.validar_codigo(codigo)                                                     #Con doble guion bajo los atributos son privados para protegerlos
         self.__precio = self.validar_precio(precio)
         self.__cantidad_stock = self.validar_cantidad_stock(cantidad_stock)
         self.__talle= talle
 
-    @property                                                               #Con property defino las propiedades para que puedan ser utilizadas por subclases. Las vuelvo accesibles y tratables. 
-    def nombre(self):                                                       # Puedo aplicar tratamientos a la ingo que to deseo devolver.
-        return self.__nombre                                                # Por ejemplo, podría devolver el precio de venta y no el precio de costo 
+    @property                                                                                         #Con property defino las propiedades para que puedan ser utilizadas por subclases. Las vuelvo accesibles y tratables. 
+    def nombre(self):                                                                                 # Puedo aplicar tratamientos a la ingo que to deseo devolver.
+        return self.__nombre                                                                          # Por ejemplo, podría devolver el precio de venta y no el precio de costo 
     
     @property
     def codigo(self):
@@ -37,9 +37,9 @@ class Producto:
     def codigo(self, nuevo_codigo):
         self.__codigo=self.validar_codigo(nuevo_codigo)
     
-    @precio.setter                                                            #Sirve para modificar datos resguardados, por ejemplo el COD 
+    @precio.setter                                                                                     #Sirve para modificar datos resguardados, por ejemplo el COD 
     def precio(self, nuevo_precio):
-        self.__precio = self.validar_precio(nuevo_precio)                     #Creo un nuevo metodo que afecte a el atributo. Ej: Validad_precio
+        self.__precio = self.validar_precio(nuevo_precio)                                              #Creo un nuevo metodo que afecte a el atributo. Ej: Validad_precio
    
     @cantidad_stock.setter
     def cantidad_stock(self, nuevo_stock):
@@ -74,7 +74,7 @@ class Producto:
         except ValueError:
             raise ValueError("La cantidad en stock debe ser un número válido.")
 
-    def to_dict(self):                                      #Retorna todos los atributos como un diccionario
+    def to_dict(self):                                                                                  #Retorna todos los atributos como un diccionario
         return {
             "nombre": self.nombre,
             "codigo":self.codigo,
@@ -83,7 +83,7 @@ class Producto:
             "talle": self.talle,
         }
 
-    def __str__(self):                                      #Cuando imprime da una cadema de texto con el nombre del articulo y su codigo
+    def __str__(self):                                                                                  #Cuando imprime da una cadema de texto con el nombre del articulo y su codigo
         return f"{self.nombre} - COD:{self.codigo}"
 
 class Calzado(Producto):      
@@ -132,8 +132,8 @@ class Bikini(Producto):
     def __str__(self):
         return f"{super().__str__()} - Tipo de Bikini: {self.tipo_bikini} - Color: {self.estampa}"
 
-class Gestion_productos:                                                    #En esta clase se crea el CRUD
-    def __init__(self):                                                     #Setea las variables a usar desde el archivo .env. Se usa así para proteger los datos
+class Gestion_productos:                                                                               #En esta clase se crea el CRUD
+    def __init__(self):                                                                                #Setea las variables a usar desde el archivo .env. Se usa así para proteger los datos
         self.host = config('DB_host')
         self.database=config('DB_name')
         self.user=config('DB_user')
@@ -150,11 +150,11 @@ class Gestion_productos:                                                    #En 
                 port=self.port,
             )
             if connection.is_connected():
-                return connection                                         #Establezco la coneccion a la DB y la devuelve para que pueda interactuar con ella. 
+                return connection                                                                      #Establezco la coneccion a la DB y la devuelve para que pueda interactuar con ella. 
 
         except Error as e:
             print(f'Error al conectar a la base de datos:{e}')
-            return None                                                        #Establece coneccion con la base de datos
+            return None                                                                                  #Establece coneccion con la base de datos
 ###
     def leer_datos(self):
         try:
@@ -180,15 +180,15 @@ class Gestion_productos:                                                    #En 
         try:
             connection = self.connect()
             if connection:
-                with connection.cursor() as cursor:                                                 #Me permite hacer consultas
+                with connection.cursor() as cursor:                                                              #Me permite hacer consultas
                 #Verificar si el código del producto existe
                     cursor.execute('select codigo FROM producto WHERE codigo = %s',(producto.codigo,))
-                    if cursor.fetchone():                                                               #Si el cursos encuentra una conincidencia:
-                        print(f'Error: ya existe producto con COD: {producto.codigo} ')
-                        return                                                                          #Interurmpo la ejecucion de l codigo si da error
+                    if cursor.fetchone():                                                                        #Si el cursos encuentra una conincidencia:
+                        print(f'Error: ya existe producto con COD: {producto.codigo} ') 
+                        return                                                                                   #Interurmpo la ejecucion de l codigo si da error
                  
                 #Insertar producto dependiendo del tipo (nombre que usé en el main para referirme a los objetos de la clase Producto)
-                    if isinstance(producto,Calzado):                                                     #Chequea si es Calzado
+                    if isinstance(producto,Calzado):                                                             #Chequea si es Calzado
                         query= '''
                         INSERT INTO producto (codigo, nombre, precio, cantidad_stock, talle)
                         VALUES (%s, %s, %s, %s, %s)
@@ -212,27 +212,28 @@ class Gestion_productos:                                                    #En 
                         INSERT INTO Bikini (codigo, tipo_bikini, estampa)
                         VALUES (%s, %s, %s)                                      
                         '''
-                        cursor.execute (query, (producto.codigo, producto.tipo_bikini, producto.estampa))           #Ver la forma de modificar esto para no repetir codigo. 
+                        cursor.execute (query, (producto.codigo, producto.tipo_bikini, producto.estampa))               #Ver la forma de modificar esto para no repetir codigo. 
                 
-                    connection.commit()                                                                             #hace la coneccion con la base de datos. MUY IMPORTANTE
+                    connection.commit()   
+                    print ('================================== !!!!!==================================')                                                                              #hace la coneccion con la base de datos. MUY IMPORTANTE
                     print (f'producto {producto.nombre} COD: {producto.codigo} creado exitosamente <3 ')
+                    print ('================================== !!!!!==================================')      
         except Exception as error:
             print(f'Error al crear el producto: {error}')
 
-
-    def leer_producto(self, codigo):
+    def leer_producto(self, codigo): #Hay que modificar esto para que quede mejor para poder usar las validaciones luego. 
         try:
-            connection=self.connect()                                                             #Con esto me conecto a la DB con el metodo que definó anteriormente para eso
+            connection=self.connect()                                                                                     #Con esto me conecto a la DB con el metodo que definó anteriormente para eso
             if connection:
-                with connection.cursor(dictionary=True) as cursor:                                 #Con esto creo un cursor que escanee la info
-                    cursor.execute('SELECT * FROM producto WHERE codigo = %s',(codigo,))      #Con esto leo todos los codigos
-                    producto_data=cursor.fetchone()                                                #En esta variable guardo la info que recopila el fetchone al tomar un codigo
+                with connection.cursor(dictionary=True) as cursor:                                                        #Con esto creo un cursor que escanee la info
+                    cursor.execute('SELECT * FROM producto WHERE codigo = %s',(codigo,))                                  #Con esto leo todos los codigos
+                    producto_data=cursor.fetchone()                                                                       #En esta variable guardo la info que recopila el fetchone al tomar un codigo
                     
                     if producto_data:
                         cursor.execute('SELECT talle FROM producto WHERE codigo=%s', (codigo, ))   
                         talle=cursor.fetchone()
                         cursor.execute('SELECT precio FROM producto WHERE codigo=%s', (codigo, ))   
-                        precio=cursor.fetchone()                                                           #Tengo que diferenciar ahora si es calzado o bikini  
+                        precio=cursor.fetchone()                                                                         #Tengo que diferenciar ahora si es calzado o bikini  
                         cursor.execute('SELECT tipo_calzado FROM calzado WHERE codigo=%s', (codigo, ))
                         tipo_calzado=cursor.fetchone()
                         cursor.execute('SELECT color FROM calzado WHERE codigo=%s', (codigo, ))
@@ -242,7 +243,7 @@ class Gestion_productos:                                                    #En 
                             producto_data['tipo_calzado']=tipo_calzado['tipo_calzado'] 
                             producto_data['color']=color['color']
                             producto_data['talle']=talle['talle'] 
-                            producto_data['precio']=precio['precio']          # ** se usa para pasar todos los atributos de la subclase teniendo en cuenta que tiene formato de diccionario
+                            producto_data['precio']=precio['precio']                                                     # ** se usa para pasar todos los atributos de la subclase teniendo en cuenta que tiene formato de diccionario
                             producto=Calzado(**producto_data)                                       
                         else:
                             cursor.execute('SELECT talle FROM producto WHERE codigo=%s', (codigo, ))   
@@ -278,44 +279,111 @@ class Gestion_productos:                                                    #En 
 
     def actualizar_producto(self, codigo, nuevo_precio):
         try:
-            datos = self.leer_datos()
-            if str(codigo) in datos:
-                 datos[str(codigo)]['precio'] = nuevo_precio
-                 self.guardar_datos(datos)
-                 print(f'Precio actializado para el producto con código:{codigo}')
-            else:
-                print(f'No se encontró producto con código:{codigo}')
+            connection=self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM producto WHERE codigo=%s',(codigo,))
+                    if not cursor.fetchone():
+                        print(f'No se econtró producto con COD:{codigo}. El producto no existe o el código es incorrecto')
+                        return
+                    cursor.execute('UPDATE producto SET precio=%s WHERE codigo=%s',(nuevo_precio, codigo))
+                    if cursor.rowcount > 0:                                                                         #Rowcont es una funcion que se aplica al cursor para que cuente el numero de columnas  
+                        connection.commit() 
+                        print ('================================== !!!!!==================================')          
+                        print(f'El precio del producto con COD: {codigo} se actualizó correctamente <3')  
+                        print ('================================== !!!!!==================================')      
+                    else: 
+                        print ('================================== !!!!!==================================')      
+                        print(f'No se econtró producto con COD:{codigo}') 
+                        print ('================================== !!!!!==================================')                                                                       #Aplico los cambios a la DB
+
         except Exception as e:
             print(f'Error al actualizar producto: {e}')
+        finally:
+            if connection.is_connected():                #Si le llevó a cabo laconeccion a la base de datos hay que terminarla luego de cada actualización. 
+                connection.close()                       #Estos () tienen en cuenta estados o actividades a realizar sobre la coneccion. Si tiene alguna especificacion entre () tiene que estar en DDL como por ejemplo para cursor.execute(.....)
 
     def eliminar_producto(self, codigo):
         try:
-            datos = self.leer_datos()
-            if str(codigo) in datos.keys():
-                 del datos[str(codigo)]
-                 self.guardar_datos(datos)
-                 print(f'Producto con COD:{codigo} eliminado correctamente')
-            else:
-                print(f'No se encontró producto con COD:{codigo}')
+            connection=self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM producto WHERE codigo=%s',(codigo,))
+                    if not cursor.fetchone():
+                        print(f'No se econtró producto con COD:{codigo}. El producto no existe o el código es incorrecto')
+                        return
+                    
+                    cursor.execute('DELETE FROM calzado WHERE codigo=%s', (codigo,))
+                    cursor.execute('DELETE FROM bikini WHERE codigo=%s', (codigo,))
+                    cursor.execute('DELETE FROM producto WHERE codigo=%s', (codigo,))
+                    if cursor.rowcount >0:                                              #si es mayor a cero quiere decir que encintró un prod con ese codigo para borrar entonces recian ahi mando la accion a la DB
+                        connection.commit()
+                        print ('================================== !!!!!==================================')      
+                        print(f'Producto con COD: {codigo} eliminado ')  
+                        print ('================================== !!!!!==================================')            
+                    else:
+                        print(f'No se encontró producto con COD:{codigo}')
+ 
         except Exception as e:
+            print ('================================== !!!!!==================================')      
             print(f'Error al eliminar el producto: {e}')
+            print ('================================== !!!!!==================================')      
+        finally:
+            if connection.is_connected():
+                connection.close()
+               
     def mostrar_productos(self):
         try:
-            datos = self.leer_datos()
-            if datos:
-                print('=============== Listado de Stock Disponible ==============')
-                for codigo, producto_data in datos.items():
-                    print(f"COD: {codigo}")
-                    print(f"  Nombre: {producto_data['nombre']}")
-                    print(f"  Precio: {producto_data['precio']}")
-                    print(f"  Cantidad Total: {producto_data['cantidad_stock']}")
-                    print(f" Talle: {producto_data['talle']}")
-                    print(f" Tipo: {producto_data['tipo']}")
-                    print(f" Color: {producto_data['color']}")
-                    print(f" Estampa: {producto_data['estampa']}")
-                    
-                print('=========================<3===============================')
-            else:
-                print('No hay Stock disponible .')
+            connection=self.connect()                                                                                     #Con esto me conecto a la DB con el metodo que definó anteriormente para eso
+            if connection:
+                with connection.cursor(dictionary=True) as cursor:                                                        #Con esto creo un cursor que escanee la info
+                    cursor.execute('SELECT * FROM producto')                                  #Con esto leo todos los codigos
+                    productos_data=cursor.fetchall()
+
+                    productos=[]                                        #productos ahora es un diccionario
+                    for producto_data in productos_data:                #Para cada conjunto de datos de 1 producto enntre todos los productos
+                        codigo=producto_data['codigo']                  #Creo la variable codigo donde se guarda la info del codigo de cada producto extraido de su forma de diccionario
+ 
+                        cursor.execute('SELECT talle FROM producto WHERE codigo=%s', (codigo, ))   
+                        talle=cursor.fetchone()
+                        cursor.execute('SELECT precio FROM producto WHERE codigo=%s', (codigo, ))   
+                        precio=cursor.fetchone()                                                                         #Tengo que diferenciar ahora si es calzado o bikini  
+                        cursor.execute('SELECT tipo_calzado FROM calzado WHERE codigo=%s', (codigo, ))
+                        tipo_calzado=cursor.fetchone()
+                        cursor.execute('SELECT color FROM calzado WHERE codigo=%s', (codigo, ))
+                        color=cursor.fetchone()
+                        
+                        if tipo_calzado and color:
+                            producto_data['tipo_calzado']=tipo_calzado['tipo_calzado'] 
+                            producto_data['color']=color['color']
+                            producto_data['talle']=talle['talle'] 
+                            producto_data['precio']=precio['precio']                                                     # ** se usa para pasar todos los atributos de la subclase teniendo en cuenta que tiene formato de diccionario
+                            producto=Calzado(**producto_data)
+                        else:
+                            cursor.execute('SELECT talle FROM producto WHERE codigo=%s', (codigo, ))   
+                            talle=cursor.fetchone()
+                            cursor.execute('SELECT precio FROM producto WHERE codigo=%s', (codigo, ))   
+                            precio=cursor.fetchone()
+                            cursor.execute('SELECT tipo_bikini FROM bikini WHERE codigo=%s', (codigo, ))
+                            tipo_bikini=cursor.fetchone()
+                            cursor.execute('SELECT estampa FROM bikini WHERE codigo=%s', (codigo, ))
+                            estampa=cursor.fetchone()
+                            
+                            if tipo_bikini and estampa:
+                                producto_data['tipo_bikini']=tipo_bikini['tipo_bikini']
+                                producto_data['estampa']=estampa['estampa']
+                                producto_data['talle']=talle['talle'] 
+                                producto_data['precio']=precio['precio']
+                                producto=Bikini(**producto_data) 
+
+                        productos.append(producto)
+
         except Exception as e:
-            print(f'Error : {e}')
+            print ('================================== !!!!!==================================')      
+            print(f'Error al mostrar los productos: {e}')
+            print ('================================== !!!!!==================================')      
+        else: 
+            return productos
+        finally:
+            if connection.is_connected():
+                connection.close()
