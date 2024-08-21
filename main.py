@@ -72,7 +72,19 @@ def eliminar_producto_por_COD(gestion):
     input('Presione enter para continuar...')
 
 def mostrar_todos_los_productos(gestion):
-    gestion.mostrar_productos()
+    try:
+        productos=gestion.mostrar_productos()
+        for producto in productos:
+            if isinstance(producto,Calzado):
+                print('________________________________________________________________')
+                print(f'COD:{producto.codigo}, nombre:{producto.nombre}, talle: {producto.talle}, precio:$ {producto.precio}, stock disponible: {producto.cantidad_stock} unidades, tipo: {producto.tipo_calzado}')
+            elif isinstance(producto,Bikini):
+                 print('________________________________________________________________')
+                 print(f'COD:{producto.codigo}, nombre: {producto.nombre}, talle:{producto.talle}, precio:$ {producto.precio}, stock disponible: {producto.cantidad_stock} unidades')
+
+    except Exception as e:
+        print(f'Error al mostrar los colaboradores{e}')
+
     print('================================<3====================================')
     input('Presione enter para continuar...')
 
