@@ -3,7 +3,7 @@ import mysql.connector
 from mysql.connector import Error
 from decouple import config
 
-import json
+
 
 class Producto:
     def __init__(self, nombre, codigo,  precio, cantidad_stock, talle):                               #Construyo la clase
@@ -155,34 +155,14 @@ class Gestion_productos:                                                        
         except Error as e:
             print(f'Error al conectar a la base de datos:{e}')
             return None                                                                                  #Establece coneccion con la base de datos
-###
-    def leer_datos(self):
-        try:
-            with open(self.archivo, 'r') as file:                          #abrimos el archivo en forma de lectura como file
-                datos = json.load(file)                                    #el load toma el archivo json y disponibiliza para leerlo y modificarlo en py
-        except FileNotFoundError:                                          #Si no se encuentra el archivo retorna un diccionario vacío
-            return {}
-        except Exception as error:
-            raise Exception(f'Error al leer datos del archivo: {error}')   #Me dice el error ocurrido
-        else:
-            return datos
 
-    def guardar_datos(self, datos):
-        try:
-            with open(self.archivo, 'w') as file:
-                json.dump(datos, file, indent=4)                       # dump lo que hace es transofrmar el archivo py a json para poder guardarlo. Con ident digo cuantos espacios separa cada cosa 
-        except IOError as error:
-            print(f'Error al intentar guardar los datos en {self.archivo}: {error}')
-        except Exception as error:
-            print(f'Error inesperado: {error}')
-###
     def crear_producto(self, producto):
         try:
             connection = self.connect()
             if connection:
                 with connection.cursor() as cursor:                                                              #Me permite hacer consultas
                 #Verificar si el código del producto existe
-                    cursor.execute('select codigo FROM producto WHERE codigo = %s',(producto.codigo,))
+                    cursor.execute('SELECT codigo FROM producto WHERE codigo = %s',(producto.codigo,))
                     if cursor.fetchone():                                                                        #Si el cursos encuentra una conincidencia:
                         print(f'Error: ya existe producto con COD: {producto.codigo} ') 
                         return                                                                                   #Interurmpo la ejecucion de l codigo si da error
@@ -221,7 +201,7 @@ class Gestion_productos:                                                        
         except Exception as error:
             print(f'Error al crear el producto: {error}')
 
-    def leer_producto(self, codigo): #Hay que modificar esto para que quede mejor para poder usar las validaciones luego. 
+    def leer_producto(self, codigo): 
         try:
             connection=self.connect()                                                                                     #Con esto me conecto a la DB con el metodo que definó anteriormente para eso
             if connection:

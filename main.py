@@ -1,7 +1,7 @@
 import os
 import platform
 
-from Afrodita_GP import (
+from Afrodita_GP1 import (
     Calzado,
     Bikini,
     Gestion_productos,
@@ -19,13 +19,14 @@ def mostrar_menu():
     print('1. Agregar Calzado')
     print('2. Agregar Bikini')
     print('3. Buscar producto por código')
-    print('4. Actualizar producto')
-    print('5. Eliminarar producto por codigo')
-    print('6. Mostrar todos los productos')
-    print('7. Salir')
+    print('4. Buscar producto por nombre')
+    print('5. Actualizar producto')
+    print('6. Eliminarar producto por codigo')
+    print('7. Mostrar todos los productos')
+    print('8. Salir')
     print('==========================<3===========================')
 
-def agregar_producto(gestion, tipo_producto):
+def agregar_producto(gestion, opcion):
     try:
         codigo = (input('Ingrese codigo del producto. El codigo debe tener el siguiente formato XXX-XX (COD-talle) '))
         nombre = input('Ingrese nombre del producto: ')
@@ -33,13 +34,12 @@ def agregar_producto(gestion, tipo_producto):
         talle = (input('Ingrese talle del producto: '))
         cantidad_stock=int(input('Ingrese cantidad de stock del producto: '))
 
-       
 
-        if tipo_producto == '1':
+        if opcion == '1':
             tipo_calzado = input('Ingrese tipo de calzado (sandalia/bota/zapatilla): ')
             color = input('Ingrese color del producto: ')
             producto = Calzado(nombre, codigo, precio, cantidad_stock, talle, color, tipo_calzado) #tengo que pasarle todos los atributos para que pueda ser ejecutada la clase y quede guardada en la instancia producto
-        elif tipo_producto == '2':
+        elif opcion == '2':
             tipo_bikini = input('Ingrese tipo de bikini (entera/2 partes/ 3 partes): ')
             estampa = (input('Ingrese color del producto: '))
             producto = Bikini(nombre, codigo, precio, cantidad_stock, talle, estampa, tipo_bikini)
@@ -58,6 +58,11 @@ def agregar_producto(gestion, tipo_producto):
 def buscar_producto_por_COD(gestion):
     codigo = input('Ingrese el COD del producto a buscar: ')
     gestion.leer_producto(codigo)
+    input('Presione enter para continuar...')
+
+def buscar_productos_por_nombre(gestion):
+    nombre = input('Ingrese el nombre del producto a buscar: ')
+    gestion.leer_productos_por_nombre(nombre)
     input('Presione enter para continuar...')
 
 def actualizar_precio_producto(gestion):
@@ -102,15 +107,18 @@ if __name__ == "__main__":
             buscar_producto_por_COD(gestion)
 
         elif opcion == '4':
-            actualizar_precio_producto(gestion)
+            buscar_productos_por_nombre(gestion)
 
         elif opcion == '5':
-            eliminar_producto_por_COD(gestion)
+            actualizar_precio_producto(gestion)
 
         elif opcion == '6':
-            mostrar_todos_los_productos(gestion)
+            eliminar_producto_por_COD(gestion)
 
         elif opcion == '7':
+            mostrar_todos_los_productos(gestion)
+
+        elif opcion == '8':
             print('Saliendo del programa...')
             break
         else:
